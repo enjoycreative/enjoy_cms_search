@@ -2,61 +2,39 @@ module Enjoy::Search
   module Controllers
     module Search
       extend ActiveSupport::Concern
-      # def index
-      #   if params[:query].blank?
-      #     @results = []
-      #   else
-      #     @results = Mongoid::Elasticsearch.search({
-      #       body: {
-      #         query: {
-      #           query_string: {
-      #             query: Mongoid::Elasticsearch::Utils.clean(params[:query])
-      #           }
-      #         },
-      #         highlight: {
-      #           fields: {
-      #             name: {},
-      #             content: {}
-      #           }
-      #         }
-      #       }},
-      #       page: params[:page],
-      #       per_page: Enjoy.configuration.search_per_page,
-      #     )
-      #   end
-      # end
 
       def index
+        if search_redirecter
+          return redirect_to url_for(params)
+        end
+
         if params[:q].blank?
           @results = []
         else
           query = params[:q].to_s.gsub(/\P{Word}+/, ' ').gsub(/ +/, ' ').strip
-          @results = Enjoy::Page.search(query,
-                                 per_page: 10,
-                                 highlight: true,
-                                 suggest: true,
-                                 page: params[:page],
-                                 per_page: Enjoy.configuration.search_per_page
-          )
-          # @results = Mongoid::Elasticsearch.search({
-          #   body: {
-          #     query: {
-          #       query_string: {
-          #         query: Mongoid::Elasticsearch::Utils.clean(params[:query])
-          #       }
-          #     },
-          #     highlight: {
-          #       fields: {
-          #         name: {},
-          #         content: {}
-          #       }
-          #     }
-          #   }},
-          #   page: params[:page],
-          #   per_page: Enjoy.config.search_per_page,
-          # )
+          @results = search_model_class.send(fts_method, query).page(params[:page]).per(10)
         end
       end
+
+      private
+      def search_model_class
+        Enjoy::Catalog::Item
+      end
+
+      def fts_method
+        :fts
+      end
+
+      def search_redirecter
+        if params[:utf8].present? or params[:submit].present? or params[:commit].present?
+          params.delete(:utf8)
+          params.delete(:submit)
+          params.delete(:commit)
+          return true
+        end
+        false
+      end
+
     end
   end
 end

@@ -1,4 +1,3 @@
-#todo multimodelsearch
 module Enjoy::Search
   class SearchController < ApplicationController
     include Enjoy::Search::Controllers::Search

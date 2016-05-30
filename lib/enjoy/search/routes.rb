@@ -11,7 +11,7 @@ module ActionDispatch::Routing
         scope module: 'search' do
 
           if routes_config[:use_search_path]
-            get 'search' => 'search#index', as: :enjoy_search
+            get 'search/(:q)(/page/:page)' => 'search#index', as: :enjoy_search
           end
         end
       end
