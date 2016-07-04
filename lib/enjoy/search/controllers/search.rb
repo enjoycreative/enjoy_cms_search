@@ -16,7 +16,7 @@ module Enjoy::Search
           @results = []
         else
           query = params[:q].to_s.gsub(/\P{Word}+/, ' ').gsub(/ +/, ' ').strip
-          @results = search_model_class.send(fts_method, query).page(params[:page]).per(10)
+          @results = search_model_class.page(params[:page]).per(10).send(fts_method, query)
         end
 
         if defined?(BreadcrumbsOnRails)
