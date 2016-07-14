@@ -1,5 +1,5 @@
 module Enjoy
   module Search
-    VERSION = "0.4.0.beta3"
+    VERSION = "0.4.0"
   end
 end

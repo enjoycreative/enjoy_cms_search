@@ -19,12 +19,6 @@ module Enjoy::Search
     def active_record?
       Enjoy::Search.orm == :active_record
     end
-    # def model_namespace
-    #   "Enjoy::Search::Models::#{Enjoy::Search.orm.to_s.camelize}"
-    # end
-    # def orm_specific(name)
-    #   "#{model_namespace}::#{name}".constantize
-    # end
   end
 
   module Controllers

@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "enjoy_cms_search"
   spec.version       = Enjoy::Search::VERSION
   spec.authors       = ["Alexander Kiseliev"]
-  spec.email         = ["i43ack@gmail.com"]
+  spec.email         = ["dev@enjoycreate.ru"]
 
   spec.summary       = %q{enjoy_cms_search}
   spec.description   = %q{enjoy_cms_search}
@@ -30,6 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
 
-  spec.add_dependency 'enjoy_cms', "~> 0.4.0.beta3"
+  spec.add_dependency 'enjoy_cms', "~> 0.4.0"
 
 end
