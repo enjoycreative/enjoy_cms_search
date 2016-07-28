@@ -4,29 +4,25 @@ module Enjoy::Search
       extend ActiveSupport::Concern
 
       def index
-        if search_redirecter
-          return redirect_to url_for(params)
-        end
+        return redirect_to url_for(params) if search_redirecter
 
-        if defined?(BreadcrumbsOnRails)
-          add_breadcrumb "search",  [:enjoy_search]
+        if Enjoy::Search.config.breadcrumbs_on_rails_support
+          add_breadcrumb "search",  [:enjoy_search],                  if: :insert_breadcrumbs
+          add_breadcrumb "results", [:enjoy_search, {q: params[:q]}], if: :insert_breadcrumbs
         end
 
         if params[:q].blank?
           @results = []
         else
-          query = params[:q].to_s.gsub(/\P{Word}+/, ' ').gsub(/ +/, ' ').strip
-          @results = search_model_class.page(params[:page]).per(10).send(fts_method, query)
-        end
-
-        if defined?(BreadcrumbsOnRails)
-          add_breadcrumb "results", [:enjoy_search, {q: params[:q]}]
+          @results = search_model_class.page(params[:page]).per(per_page).send(fts_method, query)
         end
       end
 
       private
       def search_model_class
-        Enjoy::Catalog::Item
+        if Enjoy::Search.config.pages_support
+          Enjoy::Pages::Page
+        end
       end
 
       def fts_method
@@ -41,6 +37,18 @@ module Enjoy::Search
           return true
         end
         false
+      end
+
+      def insert_breadcrumbs
+        true
+      end
+
+      def per_page
+        10
+      end
+
+      def query
+        params[:q].to_s.gsub(/\P{Word}+/, ' ').gsub(/ +/, ' ').strip
       end
 
     end

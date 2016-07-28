@@ -1,12 +1,11 @@
 require "enjoy/search/version"
+require "enjoy/search/configuration"
 require "enjoy/search/engine"
 require "enjoy/search/routes"
 
 if Enjoy.active_record?
   require 'pg_search'
 end
-
-# require 'enjoy_cms'
 
 module Enjoy::Search
   class << self
